@@ -32,7 +32,7 @@ class KataApplicationTests {
     }
 
     @Test
-    void checkCsvError() throws IOException {
+    void checkCsvMissLineError() throws IOException {
         ServicePOIs servicePOIs = new ServicePOIs();
         Zone zone = Zone.builder().minLat(6.5f).minLon(-7f).maxLat(90f).maxLon(180f).build();
 
@@ -40,6 +40,18 @@ class KataApplicationTests {
                 servicePOIs.carbonBasaEs("exampleError.csv", zone));
 
         assertTrue(exception.getMessage().contains("Error line lenght"));
+    }
+
+
+    @Test
+    void checkCsvFormaNbLineError() throws IOException {
+        ServicePOIs servicePOIs = new ServicePOIs();
+        Zone zone = Zone.builder().minLat(6.5f).minLon(-7f).maxLat(90f).maxLon(180f).build();
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+                servicePOIs.carbonBasaEs("exampleErrorNb.csv", zone));
+
+        assertTrue(exception.getMessage().contains("Error line format"));
     }
 
     @Test

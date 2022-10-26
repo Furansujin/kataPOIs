@@ -26,21 +26,33 @@ public class ServicePOIs {
                 .parallel()
                 .map(s -> s.split(" "))
                 .map(this::checkLine)
-                .filter(line -> Float.parseFloat(line[1]) >= finalZone.getMinLat() && Float.parseFloat(line[1]) <= finalZone.getMaxLat() && Float.parseFloat(line[2]) >= finalZone.getMinLon() && Float.parseFloat(line[2]) <= finalZone.getMaxLon())
+                .filter(line ->  line[0] >= finalZone.getMinLat() && line[0]  <= finalZone.getMaxLat() && line[1]  >= finalZone.getMinLon() && line[1] <= finalZone.getMaxLon())
                 .count();
 
         return count;
     }
 
     /*
-    check size line
+    check  line
      */
-    private String[] checkLine(String[] line) {
+    private Float[] checkLine(String[] line) {
 
-        if (line.length == 3) {
-            return line;
+        if (line.length != 3 ) {
+            throw new RuntimeException(String.format("Error line lenght : %s", Arrays.toString(line)));
         }
-        throw new RuntimeException(String.format("Error line lenght : %s", Arrays.toString(line)));
+
+        try {
+            Float latnb = Float.parseFloat(line[1]);
+            Float longnb = Float.parseFloat(line[2]);
+
+            if(latnb == null || longnb == null || latnb.isNaN() || longnb.isNaN()) {
+                throw new RuntimeException(String.format("Error line format : %s", Arrays.toString(line)));
+            }
+            return new Float[]{ latnb, longnb};
+
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Error line format : %s", Arrays.toString(line)));
+        }
 
     }
 
